@@ -1,3 +1,4 @@
+import csv
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (
@@ -24,10 +25,10 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Grade Corrector")
         self.resize(750, 600)
 
-        # TODO: Initialize your data attributes here (e.g., file_path, data lists)
         self.student_ids = []
         self.original_grades = []
         self.corrected_grades = []
+        self.selected_file = ""
 
         self._setup_ui()
 
@@ -98,15 +99,32 @@ class MainWindow(QMainWindow):
 
     def load_file(self):
         file_path, _ = QFileDialog.getOpenFileName(
-            self,
-            "Select Grades CSV File",
-            "",
-            "CSV Files (*.csv);;All Files (*)",
+        self,
+        "Select Grades CSV File",
+        "",
+        "CSV Files (*.csv);;All Files (*)",
         )
         if file_path:
-            # TODO: Save file_path, read the CSV contents into self.student_ids and self.original_grades,
-            #       and call self.update_table()
-            pass
+            self.selected_file = file_path
+
+            self.student_ids = []
+            self.original_grades = []
+            self.corrected_grades = []
+
+            with open(self.selected_file, mode="r", encoding="utf-8") as file:
+                reader = csv.reader(file)
+                next(reader)  # מדלג על שורת הכותרת (ID,Grade)
+
+                for row in reader:
+                    if row:
+                        student_id = row[0]
+                        grade = int(row[1])
+
+                        self.student_ids.append(student_id)
+                        self.original_grades.append(grade)
+                        self.corrected_grades.append(grade)
+
+            self.update_table()
 
     def apply_bonus(self):
         # TODO: Read the integer bonus from self.bonus_input.text(), compute self.corrected_grades,
