@@ -1,0 +1,19 @@
+[project]
+name = "ex1-grades"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Dor Tal", email = "dor.tal64@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "pyside6>=6.12.0",
+]
+
+[project.scripts]
+ex1-grades = "ex1_grades:main"
+
+[build-system]
+requires = ["uv_build>=0.13.5,<0.14.0"]
+build-backend = "uv_build"
