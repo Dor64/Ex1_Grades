@@ -1,4 +1,7 @@
 import csv
+import os
+import subprocess
+import sys
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (
@@ -142,8 +145,22 @@ class MainWindow(QMainWindow):
         self.update_table()
 
     def update_file(self):
-        # TODO: Write the updated data (ID, Original Grades, Corrected Grades) to the CSV file
-        pass
+        if not self.selected_file:
+            return
+
+        with open(self.selected_file, mode="w", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            writer.writerow(["ID", "Grade"])
+
+            for i in range(len(self.student_ids)):
+                writer.writerow([self.student_ids[i], self.corrected_grades[i]])
+
+        if sys.platform == "win32":
+            os.startfile(self.selected_file)
+        elif sys.platform == "darwin":
+            subprocess.run(["open", self.selected_file])
+        else:
+            subprocess.run(["xdg-open", self.selected_file])
 
     def update_table(self):
         """Populate the QTableWidget from self.student_ids, self.original_grades, and self.corrected_grades."""
