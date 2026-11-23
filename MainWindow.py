@@ -127,9 +127,19 @@ class MainWindow(QMainWindow):
             self.update_table()
 
     def apply_bonus(self):
-        # TODO: Read the integer bonus from self.bonus_input.text(), compute self.corrected_grades,
-        #       and call self.update_table()
-        pass
+        text = self.bonus_input.text()
+        if not text or text == "-":
+            return
+
+        bonus = int(text)
+
+        for i in range(len(self.original_grades)):
+            new_grade = self.original_grades[i] + bonus
+            if new_grade > 100:
+                new_grade = 100
+            self.corrected_grades[i] = new_grade
+
+        self.update_table()
 
     def update_file(self):
         # TODO: Write the updated data (ID, Original Grades, Corrected Grades) to the CSV file
